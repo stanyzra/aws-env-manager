@@ -1,7 +1,7 @@
 
 # Env manager
 
-A environment variable manager for AWS Amplify and ECS, initially designed for Collection.
+A environment variable manager for AWS Amplify and ECS, initially designed for Collection
 
 ## Installation (NOT FINISHIED YET)
 

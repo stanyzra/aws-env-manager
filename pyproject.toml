@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "env_manager"
+version = "1"
+authors = [
+  { name="stanyzra", email="stanyhelberth@gmail.com" },
+]
+description = "A environment variable manager for AWS Amplify and ECS, initially designed for Collection"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/stanyzra/homebrew-repo-aws-env-manager"
+Issues = "https://github.com/stanyzra/homebrew-repo-aws-env-manager/issues"
