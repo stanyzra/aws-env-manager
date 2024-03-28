@@ -17,38 +17,38 @@ def parser_configuration(project_choices, branch_choices, type_choices):
         formatter_class=formatter,
     )
 
-    parser.add_argument(
-        "-p, --project",
-        help="AWS ECS or Amplify project",
-        type=str,
-        dest="project",
-        metavar="",
-        choices=project_choices,
-    )
+    # parser.add_argument(
+    #     "-p, --project",
+    #     help="AWS ECS or Amplify project",
+    #     type=str,
+    #     dest="project",
+    #     metavar="",
+    #     choices=project_choices,
+    # )
 
-    parser.add_argument(
-        "-b, --branch",
-        help="project environment/branch: \n"
-        "   prod - production\n"
-        "   beta - beta\n"
-        "   hg - homolog\n"
-        "   dev - dev",
-        type=str,
-        dest="branch",
-        metavar="",
-        choices=branch_choices,
-    )
+    # parser.add_argument(
+    #     "-b, --branch",
+    #     help="project environment/branch: \n"
+    #     "   prod - production\n"
+    #     "   beta - beta\n"
+    #     "   hg - homolog\n"
+    #     "   dev - dev",
+    #     type=str,
+    #     dest="branch",
+    #     metavar="",
+    #     choices=branch_choices,
+    # )
 
-    parser.add_argument(
-        "-t, --type",
-        help="env variable type: \n"
-        "   normal - Normal string type\n"
-        "   secret - SecureString type",
-        type=str,
-        metavar="",
-        dest="type",
-        choices=type_choices,
-    )
+    # parser.add_argument(
+    #     "-t, --type",
+    #     help="env variable type: \n"
+    #     "   normal - Normal string type\n"
+    #     "   secret - SecureString type",
+    #     type=str,
+    #     metavar="",
+    #     dest="type",
+    #     choices=type_choices,
+    # )
 
     parser.add_argument(
         "option",
