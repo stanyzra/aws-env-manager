@@ -19,12 +19,7 @@ def parser_configuration(project_choices, branch_choices, type_choices):
 
     parser.add_argument(
         "-p, --project",
-        help="Collection project: \n"
-        "   * app-memorial-collection-v2\n"
-        "   * app-biblioteca-collection-v2\n"
-        "   * collection-front-end-v2.1\n"
-        "   * collection-api-ecs-v2\n"
-        "   * gollection-elastic-api",
+        help="AWS ECS or Amplify project",
         type=str,
         dest="project",
         metavar="",
