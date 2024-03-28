@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "env_manager"
-version = "1"
+version = "1.0.1"
 authors = [
   { name="stanyzra", email="stanyhelberth@gmail.com" },
 ]
@@ -16,6 +16,9 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
+
+[project.scripts]
+env_manager = 'env_manager.cli:main'
 
 [project.urls]
 Homepage = "https://github.com/stanyzra/homebrew-repo-aws-env-manager"

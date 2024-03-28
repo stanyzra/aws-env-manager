@@ -333,8 +333,7 @@ def get_environment_infos(
 
     return env_to_upload, project_type, app_id
 
-
-if __name__ == "__main__":
+def main():
     home_dir = os.path.expanduser("~")
     config_path = f"{home_dir}/.env_manager"
     config_file_name = "config"
@@ -425,3 +424,7 @@ if __name__ == "__main__":
         )
     else:
         print("[ERROR] Credentials not configured")
+
+
+if __name__ == "__main__":
+    main()
