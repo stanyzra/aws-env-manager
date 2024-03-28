@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from utils import *
+from .utils import *
 import argparse
 import boto3
 import boto3.session
-from utils import *
 import configparser
 from botocore.exceptions import ClientError
 
