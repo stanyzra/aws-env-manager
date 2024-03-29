@@ -3,12 +3,12 @@
 
 A environment variable manager for AWS Amplify and ECS, initially designed for Collection
 
-## Installation (NOT FINISHIED YET)
+## Installation
 
 The env manager can be installed with Brew using the following command:
 
 ```bash
-$ brew install env-manager
+$ brew install stanyzra/aws-env-manager/env_manager
 ```
 
 ## Configuring
