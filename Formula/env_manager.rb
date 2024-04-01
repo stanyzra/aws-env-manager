@@ -9,6 +9,9 @@ class EnvManager < Formula
     head "https://github.com/stanyzra/homebrew-aws-env-manager.git", branch: "main"
 
     depends_on "python@3.10"
+    depends_on "pkg-config" => :build
+    depends_on "rust" => :build
+    depends_on "openssl@3"
 
     resource "boto3" do
         url "https://files.pythonhosted.org/packages/bf/cd/8e6468c2f462ebcd6629b4b0ff4c114b0266a06bcb5cbc958ae1db6dcfff/boto3-1.34.72.tar.gz"
