@@ -18,5 +18,5 @@ To actual use the env manager, you must configure your AWS credentials first. Th
 To configure, run the following command:
 
 ```bash
-$ env-manager configure
+$ env_manager configure
 ```
