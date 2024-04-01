@@ -3,8 +3,8 @@ class EnvManager < Formula
 
     desc "A environment variable manager for AWS Amplify and ECS, initially designed for Collection"
     homepage "https://github.com/stanyzra/homebrew-aws-env-manager"
-    url "https://github.com/stanyzra/homebrew-aws-env-manager/archive/refs/tags/v1.0.4.tar.gz"
-    sha256 "1f85729c6273045ef3dc824ff2ca289f977418798098e3325992952bbdb7979e"
+    url "https://github.com/stanyzra/homebrew-aws-env-manager/archive/refs/tags/v1.0.5.tar.gz"
+    sha256 "dc1f92c429a37c869749de892c24ed5161b1ccdc4d4ea2177b632538137e72ad"
     license "Apache-2.0"
     head "https://github.com/stanyzra/homebrew-aws-env-manager.git", branch: "main"
 
