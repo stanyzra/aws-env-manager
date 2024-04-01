@@ -334,100 +334,99 @@ def get_environment_infos(
 
 
 def main():
-    home_dir = os.path.expanduser("~")
-    config_path = f"{home_dir}/.env_manager"
-    config_file_name = "config"
-    is_configured = False
-    aws_access_key_id = None
-    aws_secret_access_key = None
-    region_name = None
-    project_choices = []
-
-    if os.path.isfile(f"{config_path}/{config_file_name}"):
-        config = configparser.ConfigParser()
-        config.read(f"{config_path}/{config_file_name}")
-
-        aws_access_key_id = config["DEFAULT"]["aws_access_key_id"]
-        aws_secret_access_key = config["DEFAULT"]["aws_secret_access_key"]
-        region_name = config["DEFAULT"]["region"]
-
-        my_session = boto3.session.Session(
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            region_name=region_name,
-        )
-
-        ecs = my_session.client("ecs")
-        ssm = my_session.client("ssm")
-        amplify = my_session.client("amplify")
-
-        ecs_clusters = get_ecs_clusters(ecs)
-        amplify_apps = get_amplify_apps(amplify)
-
-        project_types = {
-            name: ecs_clusters["project_type"] for name in ecs_clusters["cluster_names"]
-        }
-        project_types.update(
-            {
-                app["app_name"]: amplify_apps["project_type"]
-                for app in amplify_apps["apps"]
-            }
-        )
-
-        project_choices = sorted(project_types.keys())
-
-        is_configured = True
-
-    branch_choices = ["production", "homolog", "development"]
-    type_choices = ["normal", "secret"]
-    args = parser_configuration(project_choices, branch_choices, type_choices)
-
-    if is_configured and args.option == "new":
-        env_infos, project_type, app_id = get_environment_infos(
-            project_choices,
-            project_types,
-            branch_choices,
-            type_choices,
-            args.option,
-            amplify_apps["apps"],
-        )
-        if project_type == "back":
-            env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
-            manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
-        else:
-            manage_amplify_envs(env_infos, app_id, amplify, args.option)
-    elif is_configured and args.option == "remove":
-        env_infos, project_type, app_id = get_environment_infos(
-            project_choices,
-            project_types,
-            branch_choices,
-            type_choices,
-            args.option,
-            amplify_apps["apps"],
-        )
-        if project_type == "back":
-            env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
-            manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
-        else:
-            manage_amplify_envs(env_infos, app_id, amplify, args.option)
-    elif args.option == "configure":
-        aws_access_key_id, aws_secret_access_key, region_name = configure_credentials(
-            aws_access_key_id, aws_secret_access_key, region_name
-        )
-
-        save_credentials(
-            aws_access_key_id,
-            aws_secret_access_key,
-            region_name,
-            config_path,
-            config_file_name,
-        )
-    else:
-        print("[ERROR] Credentials not configured")
-
-
-if __name__ == "__main__":
     try:
-        main()
+        home_dir = os.path.expanduser("~")
+        config_path = f"{home_dir}/.env_manager"
+        config_file_name = "config"
+        is_configured = False
+        aws_access_key_id = None
+        aws_secret_access_key = None
+        region_name = None
+        project_choices = []
+
+        if os.path.isfile(f"{config_path}/{config_file_name}"):
+            config = configparser.ConfigParser()
+            config.read(f"{config_path}/{config_file_name}")
+
+            aws_access_key_id = config["DEFAULT"]["aws_access_key_id"]
+            aws_secret_access_key = config["DEFAULT"]["aws_secret_access_key"]
+            region_name = config["DEFAULT"]["region"]
+
+            my_session = boto3.session.Session(
+                aws_access_key_id=aws_access_key_id,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name,
+            )
+
+            ecs = my_session.client("ecs")
+            ssm = my_session.client("ssm")
+            amplify = my_session.client("amplify")
+
+            ecs_clusters = get_ecs_clusters(ecs)
+            amplify_apps = get_amplify_apps(amplify)
+
+            project_types = {
+                name: ecs_clusters["project_type"] for name in ecs_clusters["cluster_names"]
+            }
+            project_types.update(
+                {
+                    app["app_name"]: amplify_apps["project_type"]
+                    for app in amplify_apps["apps"]
+                }
+            )
+
+            project_choices = sorted(project_types.keys())
+
+            is_configured = True
+
+        branch_choices = ["production", "homolog", "development"]
+        type_choices = ["normal", "secret"]
+        args = parser_configuration(project_choices, branch_choices, type_choices)
+
+        if is_configured and args.option == "new":
+            env_infos, project_type, app_id = get_environment_infos(
+                project_choices,
+                project_types,
+                branch_choices,
+                type_choices,
+                args.option,
+                amplify_apps["apps"],
+            )
+            if project_type == "back":
+                env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
+                manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
+            else:
+                manage_amplify_envs(env_infos, app_id, amplify, args.option)
+        elif is_configured and args.option == "remove":
+            env_infos, project_type, app_id = get_environment_infos(
+                project_choices,
+                project_types,
+                branch_choices,
+                type_choices,
+                args.option,
+                amplify_apps["apps"],
+            )
+            if project_type == "back":
+                env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
+                manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
+            else:
+                manage_amplify_envs(env_infos, app_id, amplify, args.option)
+        elif args.option == "configure":
+            aws_access_key_id, aws_secret_access_key, region_name = configure_credentials(
+                aws_access_key_id, aws_secret_access_key, region_name
+            )
+
+            save_credentials(
+                aws_access_key_id,
+                aws_secret_access_key,
+                region_name,
+                config_path,
+                config_file_name,
+            )
+        else:
+            print("[ERROR] Credentials not configured")
     except:
         print("Exiting.")
+
+if __name__ == "__main__":
+    main()
