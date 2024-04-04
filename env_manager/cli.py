@@ -19,6 +19,8 @@ def parser_configuration(project_choices, branch_choices, type_choices):
         formatter_class=formatter,
     )
 
+    # This will be used when I finish non-interactive mode
+
     # parser.add_argument(
     #     "-p, --project",
     #     help="AWS ECS or Amplify project",
@@ -74,9 +76,6 @@ def manage_ecs_task_definition(env_infos, ecs_client, option, env_already_exists
         "development": [],
     }
     while cont < largest_array_len:
-        if env_already_exists[cont] and option == "new":
-            cont += 1
-            continue
         td_name = get_td_name(env_infos["project"], env_infos["branches"][cont])
 
         latest_td = ecs_client.describe_task_definition(
@@ -101,10 +100,16 @@ def manage_ecs_task_definition(env_infos, ecs_client, option, env_already_exists
         for arg in remove_args:
             latest_td["taskDefinition"].pop(arg)
 
-        if len(tds[env_infos["branches"][cont]]) == 0:
+        key_index = find_dict_by_key(
+            latest_td["taskDefinition"]["containerDefinitions"][0]["secrets"],
+            "name",
+            env_infos["env_names"][cont],
+        )
+
+        if len(tds[env_infos["branches"][cont]]) == 0 and key_index == -1:
             tds[env_infos["branches"][cont]] = latest_td["taskDefinition"]
 
-        if option == "new":
+        if option == "new" and key_index == -1:
             tds[env_infos["branches"][cont]]["containerDefinitions"][0][
                 "secrets"
             ].append({"name": env_infos["env_names"][cont], "valueFrom": env_path})
@@ -123,6 +128,7 @@ def manage_ecs_task_definition(env_infos, ecs_client, option, env_already_exists
 
     for branch in tds:
         if len(tds[branch]):
+            print(f"Updating {branch} task definition")
             ecs_client.register_task_definition(**tds[branch])
 
 
@@ -309,7 +315,7 @@ def get_environment_infos(
         env_to_upload["branches"].append(branch)
 
         if project_type != "front":
-            env_type, _ = get_env_info_choice("Informe o tipo da env: ", type_choices)
+            env_type, _ = get_env_info_choice("Insert env type: ", type_choices)
             if env_type is None:
                 break
             env_to_upload["env_types"].append(env_type)
@@ -366,7 +372,8 @@ def main():
             amplify_apps = get_amplify_apps(amplify)
 
             project_types = {
-                name: ecs_clusters["project_type"] for name in ecs_clusters["cluster_names"]
+                name: ecs_clusters["project_type"]
+                for name in ecs_clusters["cluster_names"]
             }
             project_types.update(
                 {
@@ -394,7 +401,9 @@ def main():
             )
             if project_type == "back":
                 env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
-                manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
+                manage_ecs_task_definition(
+                    env_infos, ecs, args.option, env_already_exists
+                )
             else:
                 manage_amplify_envs(env_infos, app_id, amplify, args.option)
         elif is_configured and args.option == "remove":
@@ -408,12 +417,16 @@ def main():
             )
             if project_type == "back":
                 env_already_exists = manage_ssm_envs(env_infos, ssm, args.option)
-                manage_ecs_task_definition(env_infos, ecs, args.option, env_already_exists)
+                manage_ecs_task_definition(
+                    env_infos, ecs, args.option, env_already_exists
+                )
             else:
                 manage_amplify_envs(env_infos, app_id, amplify, args.option)
         elif args.option == "configure":
-            aws_access_key_id, aws_secret_access_key, region_name = configure_credentials(
-                aws_access_key_id, aws_secret_access_key, region_name
+            aws_access_key_id, aws_secret_access_key, region_name = (
+                configure_credentials(
+                    aws_access_key_id, aws_secret_access_key, region_name
+                )
             )
 
             save_credentials(
@@ -427,6 +440,7 @@ def main():
             print("[ERROR] Credentials not configured")
     except:
         print("Exiting.")
+
 
 if __name__ == "__main__":
     main()
