@@ -106,22 +106,19 @@ def manage_ecs_task_definition(env_infos, ecs_client, option, env_already_exists
             env_infos["env_names"][cont],
         )
 
-        if len(tds[env_infos["branches"][cont]]) == 0 and key_index == -1:
+        if len(tds[env_infos["branches"][cont]]) == 0 and (
+            (key_index == -1 and option == "new")
+            or (option == "remove" and key_index != -1)
+        ):
             tds[env_infos["branches"][cont]] = latest_td["taskDefinition"]
 
         if option == "new" and key_index == -1:
             tds[env_infos["branches"][cont]]["containerDefinitions"][0][
                 "secrets"
             ].append({"name": env_infos["env_names"][cont], "valueFrom": env_path})
-        elif option == "remove":
-            index = find_dict_by_key(
-                tds[env_infos["branches"][cont]]["containerDefinitions"][0]["secrets"],
-                "name",
-                env_infos["env_names"][cont],
-            )
-
+        elif option == "remove" and key_index != -1:
             tds[env_infos["branches"][cont]]["containerDefinitions"][0]["secrets"].pop(
-                index
+                key_index
             )
 
         cont += 1
@@ -215,7 +212,7 @@ def manage_ssm_envs(env_infos, ssm_client, option):
             )
 
             try:
-                get_ssm_parameter(env_path)
+                get_ssm_parameter(env_path, ssm_client)
                 env_already_exists.append(True)
             except ClientError as error:
                 if (

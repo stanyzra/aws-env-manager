@@ -86,8 +86,7 @@ def get_input(prompt, default_value):
     return user_input if user_input else default_value
 
 
-def get_ssm_parameter(parameter_name):
-    ssm = boto3.client("ssm")
+def get_ssm_parameter(parameter_name, ssm):
     parameter = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
     return parameter["Parameter"]["Value"]
 
