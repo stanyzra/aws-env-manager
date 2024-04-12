@@ -72,6 +72,7 @@ def manage_ecs_task_definition(env_infos, ecs_client, option, env_already_exists
     cont = 0
     tds = {
         "production": [],
+        "beta": [],
         "homolog": [],
         "development": [],
     }
@@ -383,7 +384,7 @@ def main():
 
             is_configured = True
 
-        branch_choices = ["production", "homolog", "development"]
+        branch_choices = ["production", "beta", "homolog", "development"]
         type_choices = ["normal", "secret"]
         args = parser_configuration(project_choices, branch_choices, type_choices)
 
