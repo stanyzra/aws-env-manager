@@ -134,10 +134,20 @@ def manage_amplify_envs(env_infos, app_id, amplify_client, option):
     cont = 0
     largest_array_len = get_largest_array_len(env_infos)
     app_branches_to_update = {
-        "production": {},
+        "main": {},
         "homolog": {},
+        "beta": {},
         "development": {},
     }
+
+    try:
+        main_index = env_infos["branches"].index("production")
+    except:
+        main_index = -1
+
+
+    if (main_index != -1):
+        env_infos["branches"][main_index] = "main"
 
     while cont < largest_array_len:
         if len(app_branches_to_update[env_infos["branches"][cont]]) == 0:
